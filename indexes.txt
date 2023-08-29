@@ -1,0 +1,40 @@
+SQL CREATE INDEX Statement:
+---------------------------
+The CREATE INDEX statement is used to create indexes in tables.
+
+Indexes are used to retrieve data from the database more quickly than otherwise. The users cannot see the indexes, they are just used to speed up searches/queries.
+
+When a table is created with a primary key or unique key, it automatically creates a special index named PRIMARY. We called this index as a clustered index. All indexes other than PRIMARY indexes are known as a non-clustered index or secondary index.
+
+CREATE INDEX index_name
+ON table_name (column1, column2, ...);
+
+ALTER TABLE table_name DROP INDEX index_name;
+
+Exp:emp
++--------+----------+---------+----------+
+| emp_id | emp_name | emp_sal | emp_dept |
++--------+----------+---------+----------+
+|    201 | virat    |   34650 | testing  |
+|    202 | rohit    |    NULL | testing  |
+|    205 | karan    |   23100 | testing  |
+|    206 | arjun    |   11550 | testing  |
+|    207 | dhoni    |   23100 | testing  |
+|    208 | sachin   |   23100 | testing  |
+|    501 | yuvi     |   23100 | accounts |
+|    502 | pandya   |   23100 | accounts |
+|    506 | vijay    |   30000 | accounts |
+|    600 | pintu    |   46200 | accounts |
++--------+----------+---------+----------+
+
+explain select * from emp where emp_sal=23100; it will show 10 scanned rows
+
+create index si on emp(emp_sal);
+
+explain select * from emp where emp_sal=23100; it will show 5 scanned rows
+
+To see indexes of a table:
+--------------------------
+	SHOW INDEXES FROM emp;
+
+

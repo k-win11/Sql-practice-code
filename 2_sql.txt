@@ -1,0 +1,242 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.32 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use 1130to1;
+Database changed
+mysql> select * from pnb;
++---------+---------+-----------+
+| pnb_acn | pnb_bal | pnb_adhar |
++---------+---------+-----------+
+|     101 |   20000 |      1111 |
+|     102 |   50000 |      2222 |
+|     103 |   50000 |      3333 |
++---------+---------+-----------+
+3 rows in set (0.06 sec)
+
+mysql> select * from sbi;
++---------+---------+-----------+
+| sbi_acn | sbi_bal | sbi_adhar |
++---------+---------+-----------+
+|     201 |   20000 |      1111 |
+|     202 |   30000 |      4444 |
+|     203 |   50000 |      3333 |
++---------+---------+-----------+
+3 rows in set (0.03 sec)
+
+mysql> select * from hdfc;
++----------+----------+------------+
+| hdfc_acn | hdfc_bal | hdfc_adhar |
++----------+----------+------------+
+|      301 |    20000 |       1111 |
+|      302 |    30000 |       5555 |
+|      303 |    50000 |       6666 |
++----------+----------+------------+
+3 rows in set (0.04 sec)
+
+mysql> select * from pnb inner join sbi on pnb.pnb_adhar=sbi.sbi_adhar;
++---------+---------+-----------+---------+---------+-----------+
+| pnb_acn | pnb_bal | pnb_adhar | sbi_acn | sbi_bal | sbi_adhar |
++---------+---------+-----------+---------+---------+-----------+
+|     101 |   20000 |      1111 |     201 |   20000 |      1111 |
+|     103 |   50000 |      3333 |     203 |   50000 |      3333 |
++---------+---------+-----------+---------+---------+-----------+
+2 rows in set (0.04 sec)
+
+mysql> select pnb.pnb_acn,pnb.pnb_bal,sbi.sbi_acn,sbi.sbi_bal,sbi.sbi_adhar from pnb inner join sbi on pnb.pnb_adhar=sbi.sbi_adhar;
++---------+---------+---------+---------+-----------+
+| pnb_acn | pnb_bal | sbi_acn | sbi_bal | sbi_adhar |
++---------+---------+---------+---------+-----------+
+|     101 |   20000 |     201 |   20000 |      1111 |
+|     103 |   50000 |     203 |   50000 |      3333 |
++---------+---------+---------+---------+-----------+
+2 rows in set (0.00 sec)
+
+mysql> select pnb.pnb_acn,pnb.pnb_bal,sbi.sbi_acn,sbi.sbi_bal,sbi.sbi_adhar as adhar from pnb inner join sbi on pnb.pnb_adhar=sbi.sbi_adhar;
++---------+---------+---------+---------+-------+
+| pnb_acn | pnb_bal | sbi_acn | sbi_bal | adhar |
++---------+---------+---------+---------+-------+
+|     101 |   20000 |     201 |   20000 |  1111 |
+|     103 |   50000 |     203 |   50000 |  3333 |
++---------+---------+---------+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select p.pnb_acn,p.pnb_bal,s.sbi_acn,s.sbi_bal,s.sbi_adhar as adhar from pnb as p inner join sbi as s on p.pnb_adhar=s.sbi_adhar;
++---------+---------+---------+---------+-------+
+| pnb_acn | pnb_bal | sbi_acn | sbi_bal | adhar |
++---------+---------+---------+---------+-------+
+|     101 |   20000 |     201 |   20000 |  1111 |
+|     103 |   50000 |     203 |   50000 |  3333 |
++---------+---------+---------+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select pnb.pnb_bal+sbi.sbi_bal as total_amt from
+    -> pnb inner join sbi on pnb.pnb_adhar=sbi.sbi_adhar;
++-----------+
+| total_amt |
++-----------+
+|     40000 |
+|    100000 |
++-----------+
+2 rows in set (0.00 sec)
+
+mysql> select pnb.pnb_bal+sbi.sbi_bal as total_amt,sbi.sbi_adhar as adhar from pnb inner join sbi on pnb.pnb_adhar=sbi.sbi_adhar;
++-----------+-------+
+| total_amt | adhar |
++-----------+-------+
+|     40000 |  1111 |
+|    100000 |  3333 |
++-----------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select pnb.pnb_bal+sbi.sbi_bal+hdfc.hdfc_bal as total_amt,sbi.sbi_adhar as adhar from pnb inner join sbi on pnb.pnb_adhar=sbi.sbi_adhar
+    -> inner join hdfc on hdfc.hdfc_adhar=sbi.sbi_adhar;
++-----------+-------+
+| total_amt | adhar |
++-----------+-------+
+|     60000 |  1111 |
++-----------+-------+
+1 row in set (0.00 sec)
+
+mysql> select * from pnb;
++---------+---------+-----------+
+| pnb_acn | pnb_bal | pnb_adhar |
++---------+---------+-----------+
+|     101 |   20000 |      1111 |
+|     102 |   50000 |      2222 |
+|     103 |   50000 |      3333 |
++---------+---------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> select * from sbi;
++---------+---------+-----------+
+| sbi_acn | sbi_bal | sbi_adhar |
++---------+---------+-----------+
+|     201 |   20000 |      1111 |
+|     202 |   30000 |      4444 |
+|     203 |   50000 |      3333 |
++---------+---------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> select * from pnb left join sbi on pnb.pnb_adhar=sbi.sbi_adhar;
++---------+---------+-----------+---------+---------+-----------+
+| pnb_acn | pnb_bal | pnb_adhar | sbi_acn | sbi_bal | sbi_adhar |
++---------+---------+-----------+---------+---------+-----------+
+|     101 |   20000 |      1111 |     201 |   20000 |      1111 |
+|     102 |   50000 |      2222 |    NULL |    NULL |      NULL |
+|     103 |   50000 |      3333 |     203 |   50000 |      3333 |
++---------+---------+-----------+---------+---------+-----------+
+3 rows in set (0.02 sec)
+
+mysql> select * from pnb right join sbi on pnb.pnb_adhar=sbi.sbi_adhar;
++---------+---------+-----------+---------+---------+-----------+
+| pnb_acn | pnb_bal | pnb_adhar | sbi_acn | sbi_bal | sbi_adhar |
++---------+---------+-----------+---------+---------+-----------+
+|     101 |   20000 |      1111 |     201 |   20000 |      1111 |
+|    NULL |    NULL |      NULL |     202 |   30000 |      4444 |
+|     103 |   50000 |      3333 |     203 |   50000 |      3333 |
++---------+---------+-----------+---------+---------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> select * from pnb left join sbi on pnb.pnb_adhar=sbi.sbi_adhar
+    -> union
+    -> select * from pnb right join sbi on pnb.pnb_adhar=sbi.sbi_adhar;
++---------+---------+-----------+---------+---------+-----------+
+| pnb_acn | pnb_bal | pnb_adhar | sbi_acn | sbi_bal | sbi_adhar |
++---------+---------+-----------+---------+---------+-----------+
+|     101 |   20000 |      1111 |     201 |   20000 |      1111 |
+|     102 |   50000 |      2222 |    NULL |    NULL |      NULL |
+|     103 |   50000 |      3333 |     203 |   50000 |      3333 |
+|    NULL |    NULL |      NULL |     202 |   30000 |      4444 |
++---------+---------+-----------+---------+---------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> select * from pnb cross join sbi;
++---------+---------+-----------+---------+---------+-----------+
+| pnb_acn | pnb_bal | pnb_adhar | sbi_acn | sbi_bal | sbi_adhar |
++---------+---------+-----------+---------+---------+-----------+
+|     103 |   50000 |      3333 |     201 |   20000 |      1111 |
+|     102 |   50000 |      2222 |     201 |   20000 |      1111 |
+|     101 |   20000 |      1111 |     201 |   20000 |      1111 |
+|     103 |   50000 |      3333 |     202 |   30000 |      4444 |
+|     102 |   50000 |      2222 |     202 |   30000 |      4444 |
+|     101 |   20000 |      1111 |     202 |   30000 |      4444 |
+|     103 |   50000 |      3333 |     203 |   50000 |      3333 |
+|     102 |   50000 |      2222 |     203 |   50000 |      3333 |
+|     101 |   20000 |      1111 |     203 |   50000 |      3333 |
++---------+---------+-----------+---------+---------+-----------+
+9 rows in set (0.00 sec)
+
+mysql> create table emp(eid int primary key,en varchar(10),es float);
+Query OK, 0 rows affected (0.16 sec)
+
+mysql> create table details(did int,adr varchar(10),mob int,
+    -> foreign key(did) references emp(eid));
+Query OK, 0 rows affected (0.89 sec)
+
+mysql> insert into details(101,'noida',1234);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '101,'noida',1234)' at line 1
+mysql> insert into details values(101,'noida',1234);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`1130to1`.`details`, CONSTRAINT `details_ibfk_1` FOREIGN KEY (`did`) REFERENCES `emp` (`eid`))
+mysql> insert into emp values(101,'sonu',10000);
+Query OK, 1 row affected (0.49 sec)
+
+mysql> insert into emp values(102,'monu',20000);
+Query OK, 1 row affected (1.06 sec)
+
+mysql> select * from emp;
++-----+------+-------+
+| eid | en   | es    |
++-----+------+-------+
+| 101 | sonu | 10000 |
+| 102 | monu | 20000 |
++-----+------+-------+
+2 rows in set (0.00 sec)
+
+mysql> insert into details values(101,'noida',1234);
+Query OK, 1 row affected (0.53 sec)
+
+mysql> insert into details values(103,'noida',1234);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`1130to1`.`details`, CONSTRAINT `details_ibfk_1` FOREIGN KEY (`did`) REFERENCES `emp` (`eid`))
+mysql> select * from details;
++------+-------+------+
+| did  | adr   | mob  |
++------+-------+------+
+|  101 | noida | 1234 |
++------+-------+------+
+1 row in set (0.00 sec)
+
+mysql> select * from emp;
++-----+------+-------+
+| eid | en   | es    |
++-----+------+-------+
+| 101 | sonu | 10000 |
+| 102 | monu | 20000 |
++-----+------+-------+
+2 rows in set (0.00 sec)
+
+mysql> delete from emp where eid=101;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`1130to1`.`details`, CONSTRAINT `details_ibfk_1` FOREIGN KEY (`did`) REFERENCES `emp` (`eid`))
+mysql> update emp set es=50000 where eid=101;
+Query OK, 1 row affected (1.25 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from emp;
++-----+------+-------+
+| eid | en   | es    |
++-----+------+-------+
+| 101 | sonu | 50000 |
+| 102 | monu | 20000 |
++-----+------+-------+
+2 rows in set (0.00 sec)
+
+mysql>

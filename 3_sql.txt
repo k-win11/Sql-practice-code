@@ -1,0 +1,411 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.32 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use 1130to1;
+Database changed
+mysql> create table students
+    -> (roll int,name varchar(10),marks float));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 2
+mysql> create table students
+    -> (roll int,name varchar(10),marks float);
+Query OK, 0 rows affected (0.19 sec)
+
+mysql> insert into students values
+    -> (5,'sonu',78.5),(2,'monu',56.5),
+    -> (1,'sonu',67.8),(4,'chintu',80),
+    -> (8,'karan',70),(9,'arjun',79);
+Query OK, 6 rows affected (0.09 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> select * from students;
++------+--------+-------+
+| roll | name   | marks |
++------+--------+-------+
+|    5 | sonu   |  78.5 |
+|    2 | monu   |  56.5 |
+|    1 | sonu   |  67.8 |
+|    4 | chintu |    80 |
+|    8 | karan  |    70 |
+|    9 | arjun  |    79 |
++------+--------+-------+
+6 rows in set (0.03 sec)
+
+mysql> select * from students where roll=4;
++------+--------+-------+
+| roll | name   | marks |
++------+--------+-------+
+|    4 | chintu |    80 |
++------+--------+-------+
+1 row in set (0.02 sec)
+
+mysql> explain select * from students where roll=4;
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table    | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | students | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    6 |    16.67 | Using where |
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.04 sec)
+
+mysql> create index roll_index on students(roll);
+Query OK, 0 rows affected (0.26 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from students where roll=4;
++------+--------+-------+
+| roll | name   | marks |
++------+--------+-------+
+|    4 | chintu |    80 |
++------+--------+-------+
+1 row in set (0.03 sec)
+
+mysql> explain select * from students where roll=4;
++----+-------------+----------+------------+------+---------------+------------+---------+-------+------+----------+-------+
+| id | select_type | table    | partitions | type | possible_keys | key        | key_len | ref   | rows | filtered | Extra |
++----+-------------+----------+------------+------+---------------+------------+---------+-------+------+----------+-------+
+|  1 | SIMPLE      | students | NULL       | ref  | roll_index    | roll_index | 5       | const |    1 |   100.00 | NULL  |
++----+-------------+----------+------------+------+---------------+------------+---------+-------+------+----------+-------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> select * from students;
++------+--------+-------+
+| roll | name   | marks |
++------+--------+-------+
+|    5 | sonu   |  78.5 |
+|    2 | monu   |  56.5 |
+|    1 | sonu   |  67.8 |
+|    4 | chintu |    80 |
+|    8 | karan  |    70 |
+|    9 | arjun  |    79 |
++------+--------+-------+
+6 rows in set (0.00 sec)
+
+mysql> alter table students drop index roll_index;
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from students;
++------+--------+-------+
+| roll | name   | marks |
++------+--------+-------+
+|    5 | sonu   |  78.5 |
+|    2 | monu   |  56.5 |
+|    1 | sonu   |  67.8 |
+|    4 | chintu |    80 |
+|    8 | karan  |    70 |
+|    9 | arjun  |    79 |
++------+--------+-------+
+6 rows in set (0.00 sec)
+
+mysql> alter table students add primary key(roll);
+Query OK, 0 rows affected (0.23 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from students;
++------+--------+-------+
+| roll | name   | marks |
++------+--------+-------+
+|    1 | sonu   |  67.8 |
+|    2 | monu   |  56.5 |
+|    4 | chintu |    80 |
+|    5 | sonu   |  78.5 |
+|    8 | karan  |    70 |
+|    9 | arjun  |    79 |
++------+--------+-------+
+6 rows in set (0.00 sec)
+
+mysql> select * from students where roll=4;
++------+--------+-------+
+| roll | name   | marks |
++------+--------+-------+
+|    4 | chintu |    80 |
++------+--------+-------+
+1 row in set (0.00 sec)
+
+mysql> select name from students;
++--------+
+| name   |
++--------+
+| sonu   |
+| monu   |
+| chintu |
+| sonu   |
+| karan  |
+| arjun  |
++--------+
+6 rows in set (0.00 sec)
+
+mysql> select upper(name) from students;
++-------------+
+| upper(name) |
++-------------+
+| SONU        |
+| MONU        |
+| CHINTU      |
+| SONU        |
+| KARAN       |
+| ARJUN       |
++-------------+
+6 rows in set (0.03 sec)
+
+mysql> create function f1() returns int DETERMINISTIC
+    -> begin
+    -> return 10;^C
+mysql> delimeter $
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'delimeter $' at line 1
+mysql> delemiter $
+    -> ^C
+mysql> delimiter $
+mysql> create function f1() returns int DETERMINISTIC
+    -> begin
+    -> return 10;
+    -> end
+    -> $
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> select f1()$
++------+
+| f1() |
++------+
+|   10 |
++------+
+1 row in set (0.02 sec)
+
+mysql> select f1() as res $
++------+
+| res  |
++------+
+|   10 |
++------+
+1 row in set (0.02 sec)
+
+mysql> create function f2(a int,b int) returns int DETERMINISTIC
+    -> begin
+    -> return a*b;
+    -> end
+    -> $
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> select f2(5,6)$
++---------+
+| f2(5,6) |
++---------+
+|      30 |
++---------+
+1 row in set (0.00 sec)
+
+mysql> select f2(50,60) as res$
++------+
+| res  |
++------+
+| 3000 |
++------+
+1 row in set (0.00 sec)
+
+mysql> create function f3(r int) returns float DETERMINISTIC
+    -> begin
+    -> declare m float;
+    -> select marks into m from students where roll=r;
+    -> return m;
+    -> end
+    -> $
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> select f3(5);
+    -> $
++-------+
+| f3(5) |
++-------+
+|  78.5 |
++-------+
+1 row in set (0.02 sec)
+
+mysql> select f3(50)$
++--------+
+| f3(50) |
++--------+
+|   NULL |
++--------+
+1 row in set (0.01 sec)
+
+mysql> create function f4(m float) returns varchar(20) DETERMINISTIC
+    -> begin
+    -> declare names varchar(20);
+    -> select name into names from students where marks>=m;
+    -> end
+    -> $
+ERROR 1320 (42000): No RETURN found in FUNCTION 1130to1.f4
+mysql> create function f4(m float) returns varchar(20) DETERMINISTIC
+    -> begin
+    -> declare names varchar(20);
+    -> select name into names from students where marks>=m;
+    -> return names;
+    -> end
+    -> $
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> select f4(50)$
+ERROR 1172 (42000): Result consisted of more than one row
+mysql> create procedure p1()
+    -> begin
+    -> select sum(empsal) from emp;
+    -> end
+    -> $
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> select * from emp;
+    -> $
++-----+------+-------+
+| eid | en   | es    |
++-----+------+-------+
+| 101 | sonu | 50000 |
+| 102 | monu | 20000 |
++-----+------+-------+
+2 rows in set (0.00 sec)
+
+mysql> call p1()$
+ERROR 1054 (42S22): Unknown column 'empsal' in 'field list'
+mysql> create procedure p2()
+    -> select name,max(marks) from students;
+    -> ^C
+mysql> create procedure p2()
+    -> begin
+    -> select max(marks) from students;
+    -> end
+    -> $
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> call p2()$
++------------+
+| max(marks) |
++------------+
+|         80 |
++------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> create procedure p3(in m float)
+    -> begin
+    -> select * from students where marks>=m;
+    -> end
+    -> $
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> call p3(50)$
++------+--------+-------+
+| roll | name   | marks |
++------+--------+-------+
+|    1 | sonu   |  67.8 |
+|    2 | monu   |  56.5 |
+|    4 | chintu |    80 |
+|    5 | sonu   |  78.5 |
+|    8 | karan  |    70 |
+|    9 | arjun  |    79 |
++------+--------+-------+
+6 rows in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call p3(70)$
++------+--------+-------+
+| roll | name   | marks |
++------+--------+-------+
+|    4 | chintu |    80 |
+|    5 | sonu   |  78.5 |
+|    8 | karan  |    70 |
+|    9 | arjun  |    79 |
++------+--------+-------+
+4 rows in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> create procedure p4(in r int,out m float)
+    -> begin
+    -> select marks into m from students where roll=r;
+    -> end
+    -> $
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> call p4(5)$
+ERROR 1318 (42000): Incorrect number of arguments for PROCEDURE 1130to1.p4; expected 2, got 1
+mysql> call p4(5,@res)$
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select @res$
++------+
+| @res |
++------+
+| 78.5 |
++------+
+1 row in set (0.00 sec)
+
+mysql> select @res$
++------+
+| @res |
++------+
+| 78.5 |
++------+
+1 row in set (0.00 sec)
+
+mysql> select @res$
++------+
+| @res |
++------+
+| 78.5 |
++------+
+1 row in set (0.00 sec)
+
+mysql> select @res$
++------+
+| @res |
++------+
+| 78.5 |
++------+
+1 row in set (0.00 sec)
+
+mysql> create procedure p5(inout x float)
+    -> begin
+    -> select marks into x from students where roll=x;
+    -> end
+    -> $
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> call p5(5)$
+ERROR 1414 (42000): OUT or INOUT argument 1 for routine 1130to1.p5 is not a variable or NEW pseudo-variable in BEFORE trigger
+mysql> call p5(@y)$
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> select @y$
++------+
+| @y   |
++------+
+| NULL |
++------+
+1 row in set (0.00 sec)
+
+mysql> set @y=5$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call p5(@y)$
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select @y$
++------+
+| @y   |
++------+
+| 78.5 |
++------+
+1 row in set (0.00 sec)
+
+mysql>

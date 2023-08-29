@@ -1,0 +1,814 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 16
+Server version: 8.0.32 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| 1130to1            |
+| 11to1              |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+6 rows in set (0.01 sec)
+
+mysql> use 1130to1;
+Database changed
+mysql> show tables;
++-------------------+
+| Tables_in_1130to1 |
++-------------------+
+| emp               |
++-------------------+
+1 row in set (0.01 sec)
+
+mysql> desc emp;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| empid   | int         | NO   | PRI | NULL    |       |
+| empsal  | float       | YES  |     | NULL    |       |
+| empname | varchar(10) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> alter table emp rename to e;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> desc emp;
+ERROR 1146 (42S02): Table '1130to1.emp' doesn't exist
+mysql> desc e;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| empid   | int         | NO   | PRI | NULL    |       |
+| empsal  | float       | YES  |     | NULL    |       |
+| empname | varchar(10) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> alter table e rename to emp;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> alter table emp rename column empid to emp_id;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc emp;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| emp_id  | int         | NO   | PRI | NULL    |       |
+| empsal  | float       | YES  |     | NULL    |       |
+| empname | varchar(10) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> alter table emp modify empname varchar(20);
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc emp;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| emp_id  | int         | NO   | PRI | NULL    |       |
+| empsal  | float       | YES  |     | NULL    |       |
+| empname | varchar(20) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> alter table emp add column empdept varchar(20);
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc emp;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| emp_id  | int         | NO   | PRI | NULL    |       |
+| empsal  | float       | YES  |     | NULL    |       |
+| empname | varchar(20) | YES  |     | NULL    |       |
+| empdept | varchar(20) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> insert into emp values(205,35000,'sonu','accounts');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into emp values(205,36000,'monu','accounts');
+ERROR 1062 (23000): Duplicate entry '205' for key 'emp.PRIMARY'
+mysql> insert into emp(empsal,empname,emp_id,empdept) values(36000,'monu',105,'accounts');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into emp values(101,30000,'monu');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> insert into emp(emp_id,empsal,empname) values(101,30000,'monu');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into emp values(300,12000,'chintu','coding'),
+    -> (301,15000,'rahul','coding'),(302,25000,'virat','accounts');
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select emp_id from emp
+    -> ;
++--------+
+| emp_id |
++--------+
+|    101 |
+|    105 |
+|    205 |
+|    300 |
+|    301 |
+|    302 |
++--------+
+6 rows in set (0.00 sec)
+
+mysql> select emp_id,empsal from emp;
++--------+--------+
+| emp_id | empsal |
++--------+--------+
+|    101 |  30000 |
+|    105 |  36000 |
+|    205 |  35000 |
+|    300 |  12000 |
+|    301 |  15000 |
+|    302 |  25000 |
++--------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select * from emp;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    101 |  30000 | monu    | NULL     |
+|    105 |  36000 | monu    | accounts |
+|    205 |  35000 | sonu    | accounts |
+|    300 |  12000 | chintu  | coding   |
+|    301 |  15000 | rahul   | coding   |
+|    302 |  25000 | virat   | accounts |
++--------+--------+---------+----------+
+6 rows in set (0.00 sec)
+
+mysql> insert into emp values(206,46000,'rohit','coding');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from emp;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    101 |  30000 | monu    | NULL     |
+|    105 |  36000 | monu    | accounts |
+|    205 |  35000 | sonu    | accounts |
+|    206 |  46000 | rohit   | coding   |
+|    300 |  12000 | chintu  | coding   |
+|    301 |  15000 | rahul   | coding   |
+|    302 |  25000 | virat   | accounts |
++--------+--------+---------+----------+
+7 rows in set (0.00 sec)
+
+mysql> alter table emp drop primary key;
+Query OK, 7 rows affected (0.02 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> insert into emp values(207,66000,'surya','coding');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from emp;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    101 |  30000 | monu    | NULL     |
+|    105 |  36000 | monu    | accounts |
+|    205 |  35000 | sonu    | accounts |
+|    206 |  46000 | rohit   | coding   |
+|    300 |  12000 | chintu  | coding   |
+|    301 |  15000 | rahul   | coding   |
+|    302 |  25000 | virat   | accounts |
+|    207 |  66000 | surya   | coding   |
++--------+--------+---------+----------+
+8 rows in set (0.00 sec)
+
+mysql> alter table emp add primary key(emp_id);
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from emp;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    101 |  30000 | monu    | NULL     |
+|    105 |  36000 | monu    | accounts |
+|    205 |  35000 | sonu    | accounts |
+|    206 |  46000 | rohit   | coding   |
+|    207 |  66000 | surya   | coding   |
+|    300 |  12000 | chintu  | coding   |
+|    301 |  15000 | rahul   | coding   |
+|    302 |  25000 | virat   | accounts |
++--------+--------+---------+----------+
+8 rows in set (0.00 sec)
+
+mysql> select * from emp order by empsal desc;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    207 |  66000 | surya   | coding   |
+|    206 |  46000 | rohit   | coding   |
+|    105 |  36000 | monu    | accounts |
+|    205 |  35000 | sonu    | accounts |
+|    101 |  30000 | monu    | NULL     |
+|    302 |  25000 | virat   | accounts |
+|    301 |  15000 | rahul   | coding   |
+|    300 |  12000 | chintu  | coding   |
++--------+--------+---------+----------+
+8 rows in set (0.00 sec)
+
+mysql> desc emp;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| emp_id  | int         | NO   | PRI | NULL    |       |
+| empsal  | float       | YES  |     | NULL    |       |
+| empname | varchar(20) | YES  |     | NULL    |       |
+| empdept | varchar(20) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select * from emp order by emp_id desc;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    302 |  25000 | virat   | accounts |
+|    301 |  15000 | rahul   | coding   |
+|    300 |  12000 | chintu  | coding   |
+|    207 |  66000 | surya   | coding   |
+|    206 |  46000 | rohit   | coding   |
+|    205 |  35000 | sonu    | accounts |
+|    105 |  36000 | monu    | accounts |
+|    101 |  30000 | monu    | NULL     |
++--------+--------+---------+----------+
+8 rows in set (0.00 sec)
+
+mysql> insert into emp values(307,66000,'ashwin','coding');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from emp order by empsal desc;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    207 |  66000 | surya   | coding   |
+|    307 |  66000 | ashwin  | coding   |
+|    206 |  46000 | rohit   | coding   |
+|    105 |  36000 | monu    | accounts |
+|    205 |  35000 | sonu    | accounts |
+|    101 |  30000 | monu    | NULL     |
+|    302 |  25000 | virat   | accounts |
+|    301 |  15000 | rahul   | coding   |
+|    300 |  12000 | chintu  | coding   |
++--------+--------+---------+----------+
+9 rows in set (0.00 sec)
+
+mysql> select * from emp order by empsal desc,empname asc;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    307 |  66000 | ashwin  | coding   |
+|    207 |  66000 | surya   | coding   |
+|    206 |  46000 | rohit   | coding   |
+|    105 |  36000 | monu    | accounts |
+|    205 |  35000 | sonu    | accounts |
+|    101 |  30000 | monu    | NULL     |
+|    302 |  25000 | virat   | accounts |
+|    301 |  15000 | rahul   | coding   |
+|    300 |  12000 | chintu  | coding   |
++--------+--------+---------+----------+
+9 rows in set (0.00 sec)
+
+mysql> select * from emp order by empsal;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    300 |  12000 | chintu  | coding   |
+|    301 |  15000 | rahul   | coding   |
+|    302 |  25000 | virat   | accounts |
+|    101 |  30000 | monu    | NULL     |
+|    205 |  35000 | sonu    | accounts |
+|    105 |  36000 | monu    | accounts |
+|    206 |  46000 | rohit   | coding   |
+|    207 |  66000 | surya   | coding   |
+|    307 |  66000 | ashwin  | coding   |
++--------+--------+---------+----------+
+9 rows in set (0.00 sec)
+
+mysql> select emp_id,empsal from emp;
++--------+--------+
+| emp_id | empsal |
++--------+--------+
+|    101 |  30000 |
+|    105 |  36000 |
+|    205 |  35000 |
+|    206 |  46000 |
+|    207 |  66000 |
+|    300 |  12000 |
+|    301 |  15000 |
+|    302 |  25000 |
+|    307 |  66000 |
++--------+--------+
+9 rows in set (0.00 sec)
+
+mysql> select emp_id as eid,empsal as esal from emp;
++-----+-------+
+| eid | esal  |
++-----+-------+
+| 101 | 30000 |
+| 105 | 36000 |
+| 205 | 35000 |
+| 206 | 46000 |
+| 207 | 66000 |
+| 300 | 12000 |
+| 301 | 15000 |
+| 302 | 25000 |
+| 307 | 66000 |
++-----+-------+
+9 rows in set (0.00 sec)
+
+mysql> select * from emp;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    101 |  30000 | monu    | NULL     |
+|    105 |  36000 | monu    | accounts |
+|    205 |  35000 | sonu    | accounts |
+|    206 |  46000 | rohit   | coding   |
+|    207 |  66000 | surya   | coding   |
+|    300 |  12000 | chintu  | coding   |
+|    301 |  15000 | rahul   | coding   |
+|    302 |  25000 | virat   | accounts |
+|    307 |  66000 | ashwin  | coding   |
++--------+--------+---------+----------+
+9 rows in set (0.00 sec)
+
+mysql> select * from emp where empdept='coding';
++--------+--------+---------+---------+
+| emp_id | empsal | empname | empdept |
++--------+--------+---------+---------+
+|    206 |  46000 | rohit   | coding  |
+|    207 |  66000 | surya   | coding  |
+|    300 |  12000 | chintu  | coding  |
+|    301 |  15000 | rahul   | coding  |
+|    307 |  66000 | ashwin  | coding  |
++--------+--------+---------+---------+
+5 rows in set (0.07 sec)
+
+mysql> select * from emp where empdept='accounts';
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    105 |  36000 | monu    | accounts |
+|    205 |  35000 | sonu    | accounts |
+|    302 |  25000 | virat   | accounts |
++--------+--------+---------+----------+
+3 rows in set (0.00 sec)
+
+mysql> select * from emp where empdet='accounts';
+ERROR 1054 (42S22): Unknown column 'empdet' in 'where clause'
+mysql> select * from emp where empdept='acounts';
+Empty set (0.00 sec)
+
+mysql> select * from emp where empdept=NULL;
+Empty set (0.00 sec)
+
+mysql> select * from emp where empdept='NULL';
+Empty set (0.00 sec)
+
+mysql> select * from emp where empdept=null;
+Empty set (0.00 sec)
+
+mysql> select * from emp where empdept='null';
+Empty set (0.00 sec)
+
+mysql> select * from emp where empdept is null;
++--------+--------+---------+---------+
+| emp_id | empsal | empname | empdept |
++--------+--------+---------+---------+
+|    101 |  30000 | monu    | NULL    |
++--------+--------+---------+---------+
+1 row in set (0.00 sec)
+
+mysql> select * from emp where empdept is NULL;
++--------+--------+---------+---------+
+| emp_id | empsal | empname | empdept |
++--------+--------+---------+---------+
+|    101 |  30000 | monu    | NULL    |
++--------+--------+---------+---------+
+1 row in set (0.00 sec)
+
+mysql> select * from emp where empdept is not NULL;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    105 |  36000 | monu    | accounts |
+|    205 |  35000 | sonu    | accounts |
+|    206 |  46000 | rohit   | coding   |
+|    207 |  66000 | surya   | coding   |
+|    300 |  12000 | chintu  | coding   |
+|    301 |  15000 | rahul   | coding   |
+|    302 |  25000 | virat   | accounts |
+|    307 |  66000 | ashwin  | coding   |
++--------+--------+---------+----------+
+8 rows in set (0.00 sec)
+
+mysql> select * from emp where emp_id=300;
++--------+--------+---------+---------+
+| emp_id | empsal | empname | empdept |
++--------+--------+---------+---------+
+|    300 |  12000 | chintu  | coding  |
++--------+--------+---------+---------+
+1 row in set (0.00 sec)
+
+mysql> select * from emp where empsal>=50000;
++--------+--------+---------+---------+
+| emp_id | empsal | empname | empdept |
++--------+--------+---------+---------+
+|    207 |  66000 | surya   | coding  |
+|    307 |  66000 | ashwin  | coding  |
++--------+--------+---------+---------+
+2 rows in set (0.29 sec)
+
+mysql> select * from emp where empsal>=30000;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    101 |  30000 | monu    | NULL     |
+|    105 |  36000 | monu    | accounts |
+|    205 |  35000 | sonu    | accounts |
+|    206 |  46000 | rohit   | coding   |
+|    207 |  66000 | surya   | coding   |
+|    307 |  66000 | ashwin  | coding   |
++--------+--------+---------+----------+
+6 rows in set (0.00 sec)
+
+mysql> select * from emp where empsal>=30000 and empdept='accounts';
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    105 |  36000 | monu    | accounts |
+|    205 |  35000 | sonu    | accounts |
++--------+--------+---------+----------+
+2 rows in set (0.00 sec)
+
+mysql> select * from emp;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    101 |  30000 | monu    | NULL     |
+|    105 |  36000 | monu    | accounts |
+|    205 |  35000 | sonu    | accounts |
+|    206 |  46000 | rohit   | coding   |
+|    207 |  66000 | surya   | coding   |
+|    300 |  12000 | chintu  | coding   |
+|    301 |  15000 | rahul   | coding   |
+|    302 |  25000 | virat   | accounts |
+|    307 |  66000 | ashwin  | coding   |
++--------+--------+---------+----------+
+9 rows in set (0.00 sec)
+
+mysql> select * from emp where empdept='coding' order by empsal desc;
++--------+--------+---------+---------+
+| emp_id | empsal | empname | empdept |
++--------+--------+---------+---------+
+|    207 |  66000 | surya   | coding  |
+|    307 |  66000 | ashwin  | coding  |
+|    206 |  46000 | rohit   | coding  |
+|    301 |  15000 | rahul   | coding  |
+|    300 |  12000 | chintu  | coding  |
++--------+--------+---------+---------+
+5 rows in set (0.00 sec)
+
+mysql> select * from emp;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    101 |  30000 | monu    | NULL     |
+|    105 |  36000 | monu    | accounts |
+|    205 |  35000 | sonu    | accounts |
+|    206 |  46000 | rohit   | coding   |
+|    207 |  66000 | surya   | coding   |
+|    300 |  12000 | chintu  | coding   |
+|    301 |  15000 | rahul   | coding   |
+|    302 |  25000 | virat   | accounts |
+|    307 |  66000 | ashwin  | coding   |
++--------+--------+---------+----------+
+9 rows in set (0.00 sec)
+
+mysql> select sum(empsal) from emp;
++-------------+
+| sum(empsal) |
++-------------+
+|      331000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select sum(empsal) as sum_sal from emp;
++---------+
+| sum_sal |
++---------+
+|  331000 |
++---------+
+1 row in set (0.00 sec)
+
+mysql> select count(empdept) from emp;
++----------------+
+| count(empdept) |
++----------------+
+|              8 |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> select count(empsal) from emp;
++---------------+
+| count(empsal) |
++---------------+
+|             9 |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> select sum(empsal) as sum_sal,count(empsal) from emp;
++---------+---------------+
+| sum_sal | count(empsal) |
++---------+---------------+
+|  331000 |             9 |
++---------+---------------+
+1 row in set (0.00 sec)
+
+mysql> select sum(empsal),count(empsal),avg(empsal) from emp;
++-------------+---------------+-------------------+
+| sum(empsal) | count(empsal) | avg(empsal)       |
++-------------+---------------+-------------------+
+|      331000 |             9 | 36777.77777777778 |
++-------------+---------------+-------------------+
+1 row in set (0.00 sec)
+
+mysql> select sum(empsal),count(empsal),avg(empsal),min(empsal),max(empsal) from emp;
++-------------+---------------+-------------------+-------------+-------------+
+| sum(empsal) | count(empsal) | avg(empsal)       | min(empsal) | max(empsal) |
++-------------+---------------+-------------------+-------------+-------------+
+|      331000 |             9 | 36777.77777777778 |       12000 |       66000 |
++-------------+---------------+-------------------+-------------+-------------+
+1 row in set (0.00 sec)
+
+mysql> select count(empid) from emp group by empdept;
+ERROR 1054 (42S22): Unknown column 'empid' in 'field list'
+mysql> select count(emp_id) from emp group by empdept;
++---------------+
+| count(emp_id) |
++---------------+
+|             1 |
+|             3 |
+|             5 |
++---------------+
+3 rows in set (0.00 sec)
+
+mysql> select empdept,count(emp_id) from emp group by empdept;
++----------+---------------+
+| empdept  | count(emp_id) |
++----------+---------------+
+| NULL     |             1 |
+| accounts |             3 |
+| coding   |             5 |
++----------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> select empdept,count(emp_id),sum(empsal) from emp group by empdept;
++----------+---------------+-------------+
+| empdept  | count(emp_id) | sum(empsal) |
++----------+---------------+-------------+
+| NULL     |             1 |       30000 |
+| accounts |             3 |       96000 |
+| coding   |             5 |      205000 |
++----------+---------------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> select empdept,count(emp_id),sum(empsal) from emp group by empdept
+    -> having count(emp_id)>=2;
++----------+---------------+-------------+
+| empdept  | count(emp_id) | sum(empsal) |
++----------+---------------+-------------+
+| accounts |             3 |       96000 |
+| coding   |             5 |      205000 |
++----------+---------------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> select empdept,count(emp_id) as count,sum(empsal) from emp group by empdept
+    -> having count>=2;
++----------+-------+-------------+
+| empdept  | count | sum(empsal) |
++----------+-------+-------------+
+| accounts |     3 |       96000 |
+| coding   |     5 |      205000 |
++----------+-------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from emp having empsal>40000;
++--------+--------+---------+---------+
+| emp_id | empsal | empname | empdept |
++--------+--------+---------+---------+
+|    206 |  46000 | rohit   | coding  |
+|    207 |  66000 | surya   | coding  |
+|    307 |  66000 | ashwin  | coding  |
++--------+--------+---------+---------+
+3 rows in set (0.00 sec)
+
+mysql> select sum(empsal) from emp having empsal>40000;
+ERROR 1054 (42S22): Unknown column 'empsal' in 'having clause'
+mysql> select * from emp;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    101 |  30000 | monu    | NULL     |
+|    105 |  36000 | monu    | accounts |
+|    205 |  35000 | sonu    | accounts |
+|    206 |  46000 | rohit   | coding   |
+|    207 |  66000 | surya   | coding   |
+|    300 |  12000 | chintu  | coding   |
+|    301 |  15000 | rahul   | coding   |
+|    302 |  25000 | virat   | accounts |
+|    307 |  66000 | ashwin  | coding   |
++--------+--------+---------+----------+
+9 rows in set (0.00 sec)
+
+mysql> update emp set empdept='accounts' where empdept is null;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from emp;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    101 |  30000 | monu    | accounts |
+|    105 |  36000 | monu    | accounts |
+|    205 |  35000 | sonu    | accounts |
+|    206 |  46000 | rohit   | coding   |
+|    207 |  66000 | surya   | coding   |
+|    300 |  12000 | chintu  | coding   |
+|    301 |  15000 | rahul   | coding   |
+|    302 |  25000 | virat   | accounts |
+|    307 |  66000 | ashwin  | coding   |
++--------+--------+---------+----------+
+9 rows in set (0.00 sec)
+
+mysql> update emp set empsal=empsal*.05+empsal;
+Query OK, 9 rows affected (0.01 sec)
+Rows matched: 9  Changed: 9  Warnings: 0
+
+mysql> select * from emp;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    101 |  31500 | monu    | accounts |
+|    105 |  37800 | monu    | accounts |
+|    205 |  36750 | sonu    | accounts |
+|    206 |  48300 | rohit   | coding   |
+|    207 |  69300 | surya   | coding   |
+|    300 |  12600 | chintu  | coding   |
+|    301 |  15750 | rahul   | coding   |
+|    302 |  26250 | virat   | accounts |
+|    307 |  69300 | ashwin  | coding   |
++--------+--------+---------+----------+
+9 rows in set (0.00 sec)
+
+mysql> update empset empsal=25000 where emp_id=300;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '=25000 where emp_id=300' at line 1
+mysql> update emp set empsal=25000 where emp_id=300;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from emp;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    101 |  31500 | monu    | accounts |
+|    105 |  37800 | monu    | accounts |
+|    205 |  36750 | sonu    | accounts |
+|    206 |  48300 | rohit   | coding   |
+|    207 |  69300 | surya   | coding   |
+|    300 |  25000 | chintu  | coding   |
+|    301 |  15750 | rahul   | coding   |
+|    302 |  26250 | virat   | accounts |
+|    307 |  69300 | ashwin  | coding   |
++--------+--------+---------+----------+
+9 rows in set (0.00 sec)
+
+mysql> delete from emp where emp_id=301;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from emp;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    101 |  31500 | monu    | accounts |
+|    105 |  37800 | monu    | accounts |
+|    205 |  36750 | sonu    | accounts |
+|    206 |  48300 | rohit   | coding   |
+|    207 |  69300 | surya   | coding   |
+|    300 |  25000 | chintu  | coding   |
+|    302 |  26250 | virat   | accounts |
+|    307 |  69300 | ashwin  | coding   |
++--------+--------+---------+----------+
+8 rows in set (0.00 sec)
+
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> create savepoint s;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'savepoint s' at line 1
+mysql> savepoint s;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from emp;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    101 |  31500 | monu    | accounts |
+|    105 |  37800 | monu    | accounts |
+|    205 |  36750 | sonu    | accounts |
+|    206 |  48300 | rohit   | coding   |
+|    207 |  69300 | surya   | coding   |
+|    300 |  25000 | chintu  | coding   |
+|    302 |  26250 | virat   | accounts |
+|    307 |  69300 | ashwin  | coding   |
++--------+--------+---------+----------+
+8 rows in set (0.00 sec)
+
+mysql> update emp set empsal=empsal*.1+empsal;
+Query OK, 8 rows affected (0.00 sec)
+Rows matched: 8  Changed: 8  Warnings: 0
+
+mysql> select * from emp;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    101 |  34650 | monu    | accounts |
+|    105 |  41580 | monu    | accounts |
+|    205 |  40425 | sonu    | accounts |
+|    206 |  53130 | rohit   | coding   |
+|    207 |  76230 | surya   | coding   |
+|    300 |  27500 | chintu  | coding   |
+|    302 |  28875 | virat   | accounts |
+|    307 |  76230 | ashwin  | coding   |
++--------+--------+---------+----------+
+8 rows in set (0.00 sec)
+
+mysql> savepoint s2;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delete from emp where empsal>50000;
+Query OK, 3 rows affected (0.00 sec)
+
+mysql> select * from emp;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    101 |  34650 | monu    | accounts |
+|    105 |  41580 | monu    | accounts |
+|    205 |  40425 | sonu    | accounts |
+|    300 |  27500 | chintu  | coding   |
+|    302 |  28875 | virat   | accounts |
++--------+--------+---------+----------+
+5 rows in set (0.00 sec)
+
+mysql> rollback to s;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from emp;
++--------+--------+---------+----------+
+| emp_id | empsal | empname | empdept  |
++--------+--------+---------+----------+
+|    101 |  31500 | monu    | accounts |
+|    105 |  37800 | monu    | accounts |
+|    205 |  36750 | sonu    | accounts |
+|    206 |  48300 | rohit   | coding   |
+|    207 |  69300 | surya   | coding   |
+|    300 |  25000 | chintu  | coding   |
+|    302 |  26250 | virat   | accounts |
+|    307 |  69300 | ashwin  | coding   |
++--------+--------+---------+----------+
+8 rows in set (0.00 sec)
+
+mysql> commit;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql>

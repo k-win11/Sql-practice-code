@@ -1,0 +1,47 @@
+A stored procedure is a prepared SQL code that you can save, so the code can be reused over and over again.
+
+So if you have an SQL query that you write over and over again, save it as a stored procedure, and then just call it to execute it.
+
+You can also pass parameters to a stored procedure, so that the stored procedure can act based on the parameter value(s) that is passed.
+
+syntax
+
+CREATE PROCEDURE procedure_name (parameter_type parameter_name datatype,....)    
+BEGIN    
+    Declaration_section -->exp---->declare sal int [default 1000]   
+    Executable_section --->exp---->select/update/delete queries   
+END 
+
+parameter type:
+---------------
+IN parameter
+
+It is the default mode. It takes a parameter as input, such as an attribute. When we define it, the calling program has to pass an argument to the stored procedure. This parameter's value is always protected.
+
+OUT parameters
+
+It is used to pass a parameter as output. Its value can be changed inside the stored procedure, and the changed (new) value is passed back to the calling program. It is noted that a procedure cannot access the OUT parameter's initial value when it starts.
+
+INOUT parameters
+
+It is a combination of IN and OUT parameters. It means the calling program can pass the argument, and the procedure can modify the INOUT parameter, and then passes the new value back to the calling program.
+
+
+How to call a stored procedure?
+1>with IN parameter
+
+	CALL procedure_name ( parameter(s))  
+
+2>with out parameter
+	CALL procedure_name(@var);  
+	SELECT @var;
+
+3>with inout parameter
+
+	set @var=value
+	CALL procedure_name(@var);  
+	SELECT @var;
+
+ 
+
+

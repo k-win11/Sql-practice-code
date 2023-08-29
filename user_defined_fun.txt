@@ -1,0 +1,29 @@
+>The CREATE FUNCTION statement is used for creating a stored function or user-defined functions. 
+>A stored function is a set of SQL statements that perform some operation and return a single value.
+
+Syntax: 
+ 
+
+CREATE FUNCTION function_name(func_parameter1 datatype, func_parameter2 datatype, ..)
+          RETURNS datatype [characteristics]
+          begin
+	  stmts	
+	  return stmt
+	  end
+
+characteristics
+ 	>DETERMINISTIC----->fun can perform any operation
+	>NO SQL------------>fun can not touch db
+	>READS SQL DATA---->fun can not perform DML operations
+
+
+you can call fun from select query
+
+select fun_name();
+or 
+select fun_name() as alias;
+
+
+
+
+
